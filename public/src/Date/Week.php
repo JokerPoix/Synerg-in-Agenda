@@ -39,11 +39,10 @@ class Week
         
         for ($i=1; $i <=7 ; $i++) {
             $dayToIsoFormat =(clone $firstDay)->modify("+{$i} day");
-            $dayToHumanFormat = strftime("%a %d %b", $dayToIsoFormat->getTimestamp());
-            var_dump($dayToIsoFormat->format('Y-m-d H:i:s'));
-            $dateForTheCappelli = explode(' ', $dayToIsoFormat->date)[0];
-            $day = ["isoFormat" => $dateForTheCappelli, "humanFormat" => $dayToHumanFormat];
+            $formatedDate = strftime("%a %d %b", $dayToIsoFormat->getTimestamp());
+            $date = explode(' ', $dayToIsoFormat->format('Y-m-d H:i:s'))[0];
 
+            $day = ["date" => $date, "formatedDate" => $formatedDate, "iso" => $dayToIsoFormat];
             array_push($days, $day);
         };
         return($days);

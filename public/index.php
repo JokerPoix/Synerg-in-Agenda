@@ -15,17 +15,16 @@
             }
             $days= $week->getDays();
             
-            $start = $days[0]['isoFormat'];
-            $end = $days[6]['isoFormat'];
+            $start = $days[0]['iso'];
+            $end = $days[6]['iso'];
             $pdo = get_pdo();
             $events = new Date\Events($pdo);
-            $events = $events->getEventsByDay($start , $end);
-               
+            $events = $events->getEventsByDay($start , $end, $_GET['userId']);
         ?>
 
     
     <div class="d-flex flex-row align-items-center justify-content-between mx-sm-3">
-            <h1><?="{$days[0]['humanFormat']} {$week->year} - {$days[6]['humanFormat']} {$_GET['year']}"?></h1>
+            <h1><?="{$days[0]['formatedDate']} {$week->year} - {$days[6]['formatedDate']} {$_GET['year']}"?></h1>
             <div>
                 <a href="/index.php?year=<?=$week->previousWeek()->year;?>&week=<?=$week->previousWeek()->week;?>" class="btn btn-primary">&lt;</a>
                 <a href="/index.php?year=<?=$week->nextWeek()->year;?>&week=<?=$week->nextWeek()->week;?>" class="btn btn-primary">&gt;</a>
@@ -37,21 +36,28 @@
             <tr>
                 <?php
                 foreach($days as $day){
-                    echo '<th scope="col">'.$day['humanFormat'].'</th>';   
+                    echo '<th scope="col">'.$day['formatedDate'].'</th>';   
                 }?>
             </tr>
         </thead> 
         <tbody>
-            
-            <tr class="table-danger">
-                <?php 
-                foreach($days as $day)
-                    echo "<td> </td>"
-                    ?>
+            <tr>
+                <?php foreach($days as $day):?> 
+                    <td>    
+                        <ul class="list-group">
+                        <?php
+                            if(isset($events[$day["date"]])) 
+                                foreach($events[$day["date"]] as $event) :?>
+                                    <li class="list-group-item list-group-item-secondary"><?=explode(' ', $event["start"])[1];?>  <?=$event["name"]?></li>
+                                <?php endforeach?>
+                        </ul>
+                    </td>
+                <?php endforeach?>
+
 
             </tr>  
         </tbody>
     </table>
-    <a href="/add.php" class="calendar__button">+</a>
+    <!--<a href="/add.php" class="calendar__button">+</a> -->
     </body>
 </html>
