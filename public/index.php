@@ -8,14 +8,22 @@
         <link href="../css/style.css">
     </head>
     <body>
-        <?php 
+        <?php
+
             require '../src/Date/Week.php';
+            require '../src/Date/Events.php';
+
             setlocale(LC_TIME, 'fr_FR.utf8','fra');
             try {
                 $week = new App\Date\Week($_GET['year'] ?? null, $_GET['week'] ?? null);
             } catch (\Exception $e){
                 $week =new App\Date\Week();
             }
+            $days= $week->getDays();
+            
+            $events = new Date\Events();
+            
+            
     ?>
 
     <nav class="navbar navbar-dark bg-primary mb-3">
@@ -23,7 +31,7 @@
     </nav>
 
     <div class="d-flex flex-row align-items-center justify-content-between mx-sm-3">
-            <h1>salutations</h1>
+            <h1><?="{$days[0]} {$week->year} - {$days[6]} {$_GET['year']}"?></h1>
             <div>
                 <a href="/index.php?year=<?=$week->previousWeek()->year;?>&week=<?=$week->previousWeek()->week;?>" class="btn btn-primary">&lt;</a>
                 <a href="/index.php?year=<?=$week->nextWeek()->year;?>&week=<?=$week->nextWeek()->week;?>" class="btn btn-primary">&gt;</a>
@@ -33,7 +41,7 @@
     <table class="table table-bordered">
         <thead class="thead-dark">
             <?php
-            $days= $week->getDays();
+            
             foreach($days as $day){
                 echo '<th scope="col">'.$day.' </th>';
             }?>

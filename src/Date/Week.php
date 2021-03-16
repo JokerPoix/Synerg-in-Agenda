@@ -30,15 +30,6 @@ class Week
         
     }
 
-    /*
-    *return the month plainly spelled with year
-    *@return string
-    */
-    public function ShowMonthYear(): string
-    {
-        return $this->weeks[$this->week-1] . ' ' . $this->year;
-    }
-
     public function getDays(): array
     {   
         // we need to specify 'today' otherwise datetime constructor uses 'now' which includes current time
@@ -48,7 +39,7 @@ class Week
         
         for ($i=1; $i <=7 ; $i++) {
             $day =(clone $firstDay)->modify("+{$i} day");
-            $formatedDay = strftime("%a %d", $day->getTimestamp());
+            $formatedDay = strftime("%a %d %b", $day->getTimestamp());
             array_push($days, $formatedDay);
         };
         return($days);
