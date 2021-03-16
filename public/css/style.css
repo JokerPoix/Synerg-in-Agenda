@@ -1,0 +1,24 @@
+.calendar{
+    position: relative;
+}
+.calendar__button{
+    display: block;
+    width:  55px ;
+    height: 55px ;
+    line-height: 55px;
+    text-align: center;
+    color: #FFF;
+    font-size: 30px;
+    background-color: #007bff;
+    border-radius: 50%;
+    position: absolute;
+    bottom : 30px;
+    right: 30px;
+    text-decoration: none;
+    transition: transformation;
+}
+.calendar__button:hover{
+    text-decoration: none;
+    color:#FFF;
+    transform: scale(1.2)
+}

@@ -1,37 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Document</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
-        <link href="../css/style.css">
-    </head>
-    <body>
+<?php require 'views/header.php'?>
+    
+        
         <?php
-
-            require '../src/Date/Week.php';
-            require '../src/Date/Events.php';
+            require 'bootstrap.php';
+            require 'src/Date/Week.php';
+            require 'src/Date/Events.php';
+            
 
             setlocale(LC_TIME, 'fr_FR.utf8','fra');
             try {
-                $week = new App\Date\Week($_GET['year'] ?? null, $_GET['week'] ?? null);
+                $week = new Date\Week($_GET['year'] ?? null, $_GET['week'] ?? null);
             } catch (\Exception $e){
-                $week =new App\Date\Week();
+                $week =new Date\Week();
             }
             $days= $week->getDays();
             
-            $events = new Date\Events();
-            
-            
-    ?>
+            $start = $days[0]['isoFormat'];
+            $end = $days[6]['isoFormat'];
+            $pdo = get_pdo();
+            $events = new Date\Events($pdo);
+            $events = $events->getEventsByDay($start , $end);
+               
+        ?>
 
-    <nav class="navbar navbar-dark bg-primary mb-3">
-        <a href="index.php" class="navbar-brand">Agenda Synerg-in</a>
-    </nav>
-
+    
     <div class="d-flex flex-row align-items-center justify-content-between mx-sm-3">
-            <h1><?="{$days[0]} {$week->year} - {$days[6]} {$_GET['year']}"?></h1>
+            <h1><?="{$days[0]['humanFormat']} {$week->year} - {$days[6]['humanFormat']} {$_GET['year']}"?></h1>
             <div>
                 <a href="/index.php?year=<?=$week->previousWeek()->year;?>&week=<?=$week->previousWeek()->week;?>" class="btn btn-primary">&lt;</a>
                 <a href="/index.php?year=<?=$week->nextWeek()->year;?>&week=<?=$week->nextWeek()->week;?>" class="btn btn-primary">&gt;</a>
@@ -40,12 +34,24 @@
     
     <table class="table table-bordered">
         <thead class="thead-dark">
-            <?php
-            
-            foreach($days as $day){
-                echo '<th scope="col">'.$day.' </th>';
-            }?>
+            <tr>
+                <?php
+                foreach($days as $day){
+                    echo '<th scope="col">'.$day['humanFormat'].'</th>';   
+                }?>
+            </tr>
         </thead> 
+        <tbody>
+            
+            <tr class="table-danger">
+                <?php 
+                foreach($days as $day)
+                    echo "<td> </td>"
+                    ?>
+
+            </tr>  
+        </tbody>
     </table>
+    <a href="/add.php" class="calendar__button">+</a>
     </body>
 </html>
